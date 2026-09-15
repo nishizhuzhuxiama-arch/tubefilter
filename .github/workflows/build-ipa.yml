@@ -1,0 +1,81 @@
+name: Build unsigned IPA
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build TubeFilter
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Toolchain info
+        run: |
+          xcodebuild -version
+          swift --version
+          echo "runner: $RUNNER_OS $RUNNER_ARCH"
+
+      - name: Install XcodeGen
+        run: |
+          brew install xcodegen || brew upgrade xcodegen
+          xcodegen --version
+
+      - name: Generate Xcode project
+        run: xcodegen generate --spec project.yml
+
+      - name: List schemes
+        run: xcodebuild -list -project TubeFilter.xcodeproj
+
+      - name: Build (no code signing)
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project TubeFilter.xcodeproj \
+            -scheme TubeFilter \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGN_ENTITLEMENTS="" \
+            DEVELOPMENT_TEAM="" \
+            build 2>&1 | tee build.log
+
+      - name: Show build errors
+        if: failure()
+        run: |
+          echo "===== 编译错误摘要 ====="
+          grep -n -E "error:|warning: .*deprecated" build.log | head -80 || true
+
+      - name: Package unsigned IPA
+        run: |
+          set -e
+          APP_PATH=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" | head -1)
+          if [ -z "$APP_PATH" ]; then
+            echo "未找到 .app 产物"; ls -R build/Build/Products | head -40; exit 1
+          fi
+          echo "app path: $APP_PATH"
+          rm -rf Payload
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/
+          zip -qry TubeFilter-unsigned.ipa Payload
+          rm -rf Payload
+          ls -la TubeFilter-unsigned.ipa
+          echo "===== IPA 内容 ====="
+          unzip -l TubeFilter-unsigned.ipa | head -20
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: TubeFilter-unsigned-IPA
+          path: TubeFilter-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 30

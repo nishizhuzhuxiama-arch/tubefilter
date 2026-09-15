@@ -1,0 +1,55 @@
+name: TubeFilter
+
+options:
+  bundleIdPrefix: com.watt
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: "14.0"
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "14.0"
+    ARCHS: arm64
+    ONLY_ACTIVE_ARCH: "NO"
+    ENABLE_BITCODE: "NO"
+    SWIFT_OPTIMIZATION_LEVEL: "-O"
+    ALWAYS_SEARCH_USER_PATHS: "NO"
+    CLANG_ENABLE_MODULES: "YES"
+    CODE_SIGNING_ALLOWED: "NO"
+    CODE_SIGNING_REQUIRED: "NO"
+    CODE_SIGN_IDENTITY: ""
+    CODE_SIGN_ENTITLEMENTS: ""
+    DEVELOPMENT_TEAM: ""
+    PROVISIONING_PROFILE_SPECIFIER: ""
+
+targets:
+  TubeFilter:
+    type: application
+    platform: iOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: TubeFilter
+        excludes:
+          - "Info.plist"
+    settings:
+      base:
+        PRODUCT_NAME: TubeFilter
+        PRODUCT_BUNDLE_IDENTIFIER: com.watt.tubefilter
+        INFOPLIST_FILE: TubeFilter/Info.plist
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: "NO"
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_EMIT_LOC_STRINGS: "NO"
+
+schemes:
+  TubeFilter:
+    build:
+      targets:
+        TubeFilter: all
+    run:
+      config: Debug
+    archive:
+      config: Release

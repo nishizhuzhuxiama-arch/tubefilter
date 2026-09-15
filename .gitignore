@@ -1,0 +1,25 @@
+# 构建产物
+build/
+DerivedData/
+*.ipa
+*.app
+
+# XcodeGen 生成物，不入库，由 CI 现场生成
+TubeFilter.xcodeproj/
+*.xcworkspace/
+
+# Xcode 用户态
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+
+# macOS / 编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# 本地工具链
+.tools/
+*.log
