@@ -265,6 +265,8 @@ struct RuleEditSheet: View {
         }
     }
 
+    @EnvironmentObject private var store: SettingsStore
+
     private var currentSemanticThreshold: Double {
         store.settings.filter.semanticThreshold
     }

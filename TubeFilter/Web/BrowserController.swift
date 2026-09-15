@@ -146,7 +146,7 @@ final class BrowserController: NSObject, ObservableObject {
         let payload: [String: Any] = [
             "enabled": true,
             "removeAds": filter.removeAds,
-            "removeWatchRecommendations": filter.removeWatchRecommendations,
+            "removeWatchRecommendations": filter.removeWatchPageRecommendations,
             "removeComments": filter.removeComments,
             "removeHomeShelves": filter.removeHomeShelves,
             "blockShorts": filter.blockShorts,
@@ -347,7 +347,7 @@ final class BrowserController: NSObject, ObservableObject {
             "verdicts": encoded,
             "showPlaceholder": filter.showBlockedPlaceholder,
             "removeAds": filter.removeAds,
-            "removeWatchRecommendations": filter.removeWatchRecommendations,
+            "removeWatchRecommendations": filter.removeWatchPageRecommendations,
             "removeComments": filter.removeComments,
             "removeHomeShelves": filter.removeHomeShelves,
             "blockShorts": filter.blockShorts

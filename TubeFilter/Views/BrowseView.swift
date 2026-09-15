@@ -185,8 +185,8 @@ struct BrowseView: View {
                 }
             }
 
-            if let error = browser.lastError {
-                errorBar(error)
+            if browser.lastError != nil {
+                errorBar
             }
 
             filterStatusBar
